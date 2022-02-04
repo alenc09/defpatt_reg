@@ -1,0 +1,54 @@
+$`Área vegetação secundária 5`
+
+	Wilcoxon rank sum exact test
+
+data:  area_vegsec by padrao
+W = 8, p-value = 0.03788
+alternative hypothesis: true location shift is not equal to 0
+
+
+$`Área vegetação secundária 10`
+
+	Wilcoxon rank sum exact test
+
+data:  area_vegsec by padrao
+W = 30, p-value = 0.535
+alternative hypothesis: true location shift is not equal to 0
+
+
+$`Área vegetação secundária 15`
+
+	Wilcoxon rank sum exact test
+
+data:  area_vegsec by padrao
+W = 29, p-value = 0.62
+alternative hypothesis: true location shift is not equal to 0
+
+
+$`Área vegetação secundária 20`
+
+	Wilcoxon rank sum exact test
+
+data:  area_vegsec by padrao
+W = 29, p-value = 0.62
+alternative hypothesis: true location shift is not equal to 0
+
+
+$`Área vegetação secundária 25`
+
+	Wilcoxon rank sum exact test
+
+data:  area_vegsec by padrao
+W = 36, p-value = 0.1649
+alternative hypothesis: true location shift is not equal to 0
+
+
+$`Área vegetação secundária 30`
+
+	Wilcoxon rank sum exact test
+
+data:  area_vegsec by padrao
+W = 40, p-value = 0.05303
+alternative hypothesis: true location shift is not equal to 0
+
+
