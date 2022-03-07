@@ -1,6 +1,7 @@
 setwd ("C:/Users/Lucas Alencar/OneDrive/Documentos/Mestrado/INPE/R/parte_3")
 vegsec <-
   read_excel("C:/Users/Lucas Alencar/OneDrive/Documentos/Mestrado/INPE/area_vegsec.xlsx")
+
 mod_slope <- aov(areaha_florsec ~ ano * padrao, data = vegsec)
 summary(mod_slope)
 mod_inter <- aov(areaha_florsec ~ ano + padrao, data = vegsec)
@@ -13,10 +14,10 @@ library(readxl)
 library(ggplot2)
 library(ggsignif)
 library(ggpubr)
+library(here)
 
 #Data####
-ennmn_geo <-
-  read_excel("C:/Users/Lucas/OneDrive/Documentos/Mestrado/INPE/ennmn_geo.xlsx")
+read_excel(here("data/ennmn_geo.xlsx"))-> ennmn_geo
 ennmn_geo$florfac <- as.factor(ennmn_geo$florfac)
 ennmn_geo$ano <- as.factor(ennmn_geo$ano)
 
@@ -29,7 +30,7 @@ geo_ennmn <-
   theme_classic() +
   scale_fill_manual(
     "Pattern",
-    labels = c("Primary", "Primary+secondary"),
+    labels = c("Old growth", "Old growth + secondary"),
     breaks = c("prima", "sec"),
     values = c("grey80", "grey20")
   ) +
@@ -43,10 +44,11 @@ geo_ennmn <-
   )
 geo_ennmn
 
-ennmn_esp <-
-  read_excel("C:/Users/Lucas/OneDrive/Documentos/Mestrado/INPE/ennmn_esp.xlsx")
+
+read_excel(here("data/ennmn_esp.xlsx")) -> ennmn_esp
 ennmn_esp$florfac <- as.factor(ennmn_esp$florfac)
 ennmn_esp$ano <- as.factor(ennmn_esp$ano)
+
 esp_ennmn <-
   ggplot(ennmn_esp, aes(x = ano, y = enn_mn, fill = florfac)) +
   geom_boxplot(colour = "black") +
@@ -56,7 +58,7 @@ esp_ennmn <-
   theme_classic() +
   scale_fill_manual(
     "Pattern",
-    labels = c("Primary", "Primary+secondary"),
+    labels = c("Old growth", "Old growth + secondary"),
     breaks = c("prima", "sec"),
     values = c("grey80", "grey20")
   ) +
@@ -77,8 +79,9 @@ enn_mn <- ggarrange(
   nrow = 1,
   common.legend = T
 )
+
 ggsave(
-  "C:/Users/Lucas/OneDrive/Documentos/Mestrado/dissertacao/2art_/bp_ennmn.png",
+  "img/bp_ennmn.png",
   plot = enn_mn,
   width = 15,
   height = 8,
