@@ -132,3 +132,4 @@ ggsave("img/vegsec.padrao.png", plot = vegsec.padrao, dpi = 300 )
 ## slopes comparison####
 acov.geo.esp<- aov(areaha_florsec ~ ano*padrao, data = metricas_vegsec)
 anova(acov.geo.esp)
+car:::Anova(acov.geo.esp, type="III")
