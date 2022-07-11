@@ -1,7 +1,53 @@
-setwd ("C:/Users/Lucas Alencar/OneDrive/Documentos/Mestrado/INPE/R/parte_3")
-vegsec <-
-  read_excel("C:/Users/Lucas Alencar/OneDrive/Documentos/Mestrado/INPE/area_vegsec.xlsx")
+# Wed May 04 15:55:01 2022 ------------------------------
+#Scripts para análise de mudança no isolamento médio das paisagens
 
+#libraries----
+library(readxl)
+library(dplyr)
+library(stringr)
+library(ggplot2)
+library(tidyr)
+library(ggpubr)
+library(here)
+
+#Data----
+read_excel("C:/Users/Lucas Alencar/OneDrive/Documentos/Mestrado/INPE/area_vegsec.xlsx") -> vegsec
+read_excel("D:/lucas_alencar/github/defpatt_reg/data/planilha_metricas.xlsx") -> db_florprima
+read_excel("D:/lucas_alencar/github/defpatt_reg/data/planilha_metricas.xlsx", sheet = 2) -> db_flortotal
+read_excel(here("data/ennmn_geo.xlsx"))-> ennmn_geo
+ennmn_geo$florfac <- as.factor(ennmn_geo$florfac)
+ennmn_geo$ano <- as.factor(ennmn_geo$ano)
+
+#data exploration----
+str_split_fixed(string = db_florprima$paisagem_ano, pattern = "_", n = 2) -> db_florprima[c("paisagem", "ano")]
+str_split_fixed(string = db_flortotal$paisagem_ano, pattern = "_", n = 2) -> db_flortotal[c("paisagem", "ano")]
+
+db_florprima %>% 
+  dplyr::select(paisagem, ano, padrao, ENN_MN) %>%  
+  rename(ENNMN_prima = ENN_MN) %>% 
+  left_join(y=db_flortotal) %>%
+  dplyr::select(paisagem, ano, padrao, ENNMN_prima, ENN_MN) %>%
+  rename(ENNMN_total = ENN_MN) %>%
+  mutate(across (.cols = 1:3, .fns = as.factor)) %>%
+  group_by(padrao, ano) %>% 
+  summarise(mean_ennmn_prima = mean(ENNMN_prima),
+            mean_ennmn_total = mean(ENNMN_total),
+            sd_ennmn_prima = sd(ENNMN_prima),
+            sd_ennmn_total = sd(ENNMN_total)) %>%
+  mutate(enn_dif = 1 - (mean_ennmn_total/mean_ennmn_prima)) %>% 
+  glimpse -> tab.enn.dif
+  
+db_florprima %>% 
+  dplyr::select(paisagem, ano, padrao, ENN_MN) %>%  
+  rename(ENNMN_prima = ENN_MN) %>% 
+  left_join(y=db_flortotal) %>%
+  dplyr::select(paisagem, ano, padrao, ENNMN_prima, ENN_MN) %>%
+  rename(ENNMN_total = ENN_MN) %>%
+  mutate(across (.cols = 1:3, .fns = as.factor)) %>%
+  pivot_longer(cols = 4:5, names_to = "florfac", names_prefix = "ENNMN_", values_to = "ENN_MN") %>% 
+  glimpse ->tab.enn
+
+#Analysis----
 mod_slope <- aov(areaha_florsec ~ ano * padrao, data = vegsec)
 summary(mod_slope)
 mod_inter <- aov(areaha_florsec ~ ano + padrao, data = vegsec)
@@ -9,27 +55,15 @@ summary(mod_inter)
 capture.output(mod_slope, file = "mod_slope.txt")
 capture.output(mod_inter, file = "mod_inter.txt")
 
-#Libraries####
-library(readxl)
-library(ggplot2)
-library(ggsignif)
-library(ggpubr)
-library(here)
-
-#Data####
-read_excel(here("data/ennmn_geo.xlsx"))-> ennmn_geo
-ennmn_geo$florfac <- as.factor(ennmn_geo$florfac)
-ennmn_geo$ano <- as.factor(ennmn_geo$ano)
-
-geo_ennmn <-
-  ggplot(ennmn_geo, aes(x = ano, y = ENN_MN, fill = florfac)) +
-  geom_boxplot(colour = "black") +
+#Figures----
+tab.enn %>% 
+  filter(padrao == "geo") %>% 
+ggplot() +
+  geom_boxplot(aes(x = ano, y = ENN_MN, fill = florfac)) +
   ggtitle("a) Geometric Pattern") +
   scale_x_discrete(name = "Year") +
   scale_y_continuous(name = "ENN_MN (m)") +
-  theme_classic() +
-  scale_fill_manual(
-    "Pattern",
+  scale_fill_manual("Pattern",
     labels = c("Old growth", "Old growth + secondary"),
     breaks = c("prima", "sec"),
     values = c("grey80", "grey20")
@@ -55,9 +89,7 @@ esp_ennmn <-
   ggtitle("b) Fishbone Pattern") +
   scale_x_discrete(name = "Year") +
   scale_y_continuous(name = "ENN_MN (m)") +
-  theme_classic() +
-  scale_fill_manual(
-    "Pattern",
+  scale_fill_manual("Pattern",
     labels = c("Old growth", "Old growth + secondary"),
     breaks = c("prima", "sec"),
     values = c("grey80", "grey20")
@@ -72,13 +104,12 @@ esp_ennmn <-
   )
 esp_ennmn
 
-enn_mn <- ggarrange(
+ggarrange(
   geo_ennmn,
   esp_ennmn,
   ncol = 2,
   nrow = 1,
-  common.legend = T
-)
+  common.legend = T) -> fig.5
 
 ggsave(
   "img/bp_ennmn.png",

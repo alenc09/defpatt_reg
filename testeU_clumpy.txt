@@ -1,0 +1,63 @@
+$`CLUMPY 1985`
+
+	Wilcoxon rank sum exact test
+
+data:  CLUMPY by padrao
+W = 11, p-value = 0.09732
+alternative hypothesis: true location shift is not equal to 0
+
+
+$`CLUMPY 1990`
+
+	Wilcoxon rank sum exact test
+
+data:  CLUMPY by padrao
+W = 7, p-value = 0.02622
+alternative hypothesis: true location shift is not equal to 0
+
+
+$`CLUMPY 1995`
+
+	Wilcoxon rank sum exact test
+
+data:  CLUMPY by padrao
+W = 10, p-value = 0.07284
+alternative hypothesis: true location shift is not equal to 0
+
+
+$`CLUMPY 2000`
+
+	Wilcoxon rank sum test with continuity correction
+
+data:  CLUMPY by padrao
+W = 13.5, p-value = 0.1792
+alternative hypothesis: true location shift is not equal to 0
+
+
+$`CLUMPY 2005`
+
+	Wilcoxon rank sum exact test
+
+data:  CLUMPY by padrao
+W = 12, p-value = 0.1282
+alternative hypothesis: true location shift is not equal to 0
+
+
+$`CLUMPY 2010`
+
+	Wilcoxon rank sum exact test
+
+data:  CLUMPY by padrao
+W = 8, p-value = 0.03788
+alternative hypothesis: true location shift is not equal to 0
+
+
+$`CLUMPY 2015`
+
+	Wilcoxon rank sum exact test
+
+data:  CLUMPY by padrao
+W = 8, p-value = 0.03788
+alternative hypothesis: true location shift is not equal to 0
+
+
